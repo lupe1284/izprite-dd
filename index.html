@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>izprite dd</title>
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #0d0d0d;
+      color: #ffffff;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+    .container {
+      text-align: center;
+    }
+    h1 {
+      font-size: 3rem;
+      margin-bottom: 20px;
+      letter-spacing: 2px;
+    }
+    .timer {
+      font-size: 2rem;
+      background: #1a1a1a;
+      padding: 20px 30px;
+      border-radius: 12px;
+      box-shadow: 0 0 20px rgba(255,255,255,0.1);
+    }
+      .celebrate {
+      font-size: 3rem;
+      color: #00ffcc;
+      margin-top: 20px;
+      display: none;
+      animation: pulse 1.5s infinite;
+    }
+    @keyframes pulse {
+      0% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.1); opacity: 0.8; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>izprite dd</h1>
+    <div class="timer" id="timer">Carregando...</div>
+    <div class="celebrate" id="celebrate">🎆 PARABÉNS! 🎆<br/>vc pode goonar son, dd</div>
+  </div>
+
+  <canvas id="fireworks"></canvas>
+
+  <script>
+    // Data alvo: 1 de janeiro de 2026 às 00:00
+    const targetDate = new Date(2026, 0, 1, 0, 0, 0);
+
+    function updateTimer() {
+      const now = new Date();
+      const diff = targetDate - now;
+
+      if (diff <= 0) {
+        document.getElementById('timer').innerText = '00:00:00';
+        document.getElementById('celebrate').style.display = 'block';
+        startFireworks();
+        return;
+      }
+
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+      const minutes = Math.floor((diff / (1000 * 60)) % 60);
+      const seconds = Math.floor((diff / 1000) % 60);
+
+      document.getElementById('timer').innerText =
+        `${days}d ${hours}h ${minutes}m ${seconds}s`;
+    }
+
+    setInterval(updateTimer, 1000);
+    updateTimer();
+
+    // ===== FOGOS DE ARTIFÍCIO =====
+    const canvas = document.getElementById('fireworks');
+    const ctx = canvas.getContext('2d');
+    let particles = [];
+
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resizeCanvas);
+
+    function startFireworks() {
+      canvas.style.display = 'block';
+      resizeCanvas();
+      setInterval(createFirework, 500);
+      animateFireworks();
+    }
+
+    function createFirework() {
+      const x = Math.random() * canvas.width;
+      const y = Math.random() * canvas.height / 2;
+      const colors = ['#ff004c', '#00ffcc', '#ffe600', '#ffffff'];
+
+      for (let i = 0; i < 50; i++) {
+        particles.push({
+          x,
+          y,
+          angle: Math.random() * Math.PI * 2,
+          speed: Math.random() * 5 + 2,
+          radius: 2,
+          life: 100,
+          color: colors[Math.floor(Math.random() * colors.length)]
+        });
+      }
+    }
+
+    function animateFireworks() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      particles = particles.filter(p => p.life > 0);
+
+      particles.forEach(p => {
+        p.x += Math.cos(p.angle) * p.speed;
+        p.y += Math.sin(p.angle) * p.speed;
+        p.life--;
+
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+        ctx.fillStyle = p.color;
+        ctx.fill();
+      });
+
+      requestAnimationFrame(animateFireworks);
+    }
+  </script>
+</body>
+</html>
