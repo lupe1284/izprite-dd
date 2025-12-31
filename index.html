@@ -12,84 +12,68 @@
       margin: 0;
       height: 100vh;
       font-family: 'Segoe UI', Arial, sans-serif;
+      background:
+        linear-gradient(120deg,
+          rgba(120,0,255,0.35),
+          rgba(200,0,255,0.35),
+          rgba(120,0,255,0.35)),
+        url('./background.png') center/cover no-repeat;
+      animation: bgMove 18s ease-in-out infinite;
       color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       overflow: hidden;
     }
 
-    /* ===== FUNDO ANIMADO ===== */
-    .background {
-      position: fixed;
-      inset: 0;
-      background:
-        linear-gradient(rgba(0,0,0,.65), rgba(0,0,0,.85)),
-        url("./background.png") center / cover no-repeat;
-      animation: zoomMove 30s ease-in-out infinite alternate;
-      filter: brightness(1.1) contrast(1.1);
-      z-index: -2;
+    @keyframes bgMove {
+      0% { background-position: center top; }
+      50% { background-position: center bottom; }
+      100% { background-position: center top; }
     }
 
-    .background::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: radial-gradient(circle at 50% 50%, rgba(255,0,80,.25), transparent 60%);
-      animation: glowMove 12s linear infinite;
-      mix-blend-mode: screen;
-    }
-
-    @keyframes zoomMove {
-      0% { transform: scale(1) translate(0,0); }
-      50% { transform: scale(1.08) translate(-20px,-10px); }
-      100% { transform: scale(1.15) translate(20px,10px); }
-    }
-
-    @keyframes glowMove {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
-    }
-
-    /* ===== CARD ===== */
     .glass {
-      position: relative;
       backdrop-filter: blur(18px);
-      background: rgba(0,0,0,0.6);
-      border: 1px solid rgba(255,255,255,0.15);
+      background: rgba(40,0,70,0.6);
+      border: 1px solid rgba(200,150,255,0.3);
       border-radius: 22px;
-      padding: 40px 55px;
+      padding: 45px 55px;
       text-align: center;
-      box-shadow: 0 0 80px rgba(255,0,80,0.45);
+      box-shadow: 0 0 70px rgba(180,0,255,0.6);
       animation: fadeIn 1.2s ease;
+      z-index: 2;
     }
 
     h1 {
       margin: 0 0 15px;
-      font-size: 3rem;
+      font-size: 3.2rem;
       letter-spacing: 4px;
-      color: #ff004c;
-      text-shadow: 0 0 30px rgba(255,0,76,.9);
+      color: #d38bff;
+      text-shadow: 0 0 25px rgba(200,0,255,0.9);
     }
 
     .subtitle {
-      opacity: .8;
-      margin-bottom: 25px;
+      opacity: .85;
+      margin-bottom: 28px;
+      color: #e6caff;
     }
 
     .timer {
-      font-size: 2.4rem;
+      font-size: 2.5rem;
       font-weight: bold;
-      padding: 18px 30px;
-      border-radius: 14px;
-      background: rgba(0,0,0,.65);
-      box-shadow: inset 0 0 25px rgba(255,0,76,.3);
+      padding: 18px 32px;
+      border-radius: 16px;
+      background: rgba(60,0,90,.65);
+      box-shadow: inset 0 0 25px rgba(200,0,255,.4);
+      color: #ffffff;
     }
 
     .celebrate {
       display: none;
-      margin-top: 25px;
-      font-size: 2.6rem;
-      color: #00ffcc;
-      text-shadow: 0 0 35px #00ffcc;
+      margin-top: 28px;
+      font-size: 2.9rem;
+      color: #e0b3ff;
+      text-shadow: 0 0 30px #c77dff;
       animation: pulse 1.3s infinite;
     }
 
@@ -98,37 +82,44 @@
       inset: 0;
       pointer-events: none;
       display: none;
+      z-index: 1;
+    }
+
+    #musicBtn {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      padding: 14px 22px;
+      border-radius: 30px;
+      border: none;
+      background: linear-gradient(45deg, #a200ff, #ff6fff);
+      color: #12001f;
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: 0 0 25px rgba(180,0,255,.8);
+      transition: transform .2s, box-shadow .2s;
+      z-index: 3;
+    }
+
+    #musicBtn:hover {
+      transform: scale(1.1);
+      box-shadow: 0 0 40px rgba(220,120,255,1);
     }
 
     @keyframes pulse {
       0% { transform: scale(1); }
-      50% { transform: scale(1.1); }
+      50% { transform: scale(1.08); }
       100% { transform: scale(1); }
     }
 
     @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(30px); }
+      from { opacity: 0; transform: translateY(20px); }
       to { opacity: 1; transform: translateY(0); }
-    }
-
-    /* botão de música */
-    .music-btn {
-      margin-top: 20px;
-      padding: 8px 18px;
-      border-radius: 20px;
-      border: none;
-      cursor: pointer;
-      background: #ff004c;
-      color: white;
-      font-weight: bold;
-      box-shadow: 0 0 20px rgba(255,0,76,.6);
     }
   </style>
 </head>
 
 <body>
-  <div class="background"></div>
-
   <div class="glass">
     <h1>izprite dd</h1>
     <div class="subtitle">contagem regressiva</div>
@@ -137,84 +128,81 @@
       🎆 PARABÉNS! 🎆<br>
       vc pode goonar son, dd
     </div>
-    <button class="music-btn" onclick="toggleMusic()">🎵 Música</button>
   </div>
 
   <canvas id="fireworks"></canvas>
 
-  <!-- MÚSICA -->
-  <audio id="music" loop>
-    <source src="./music.mp3" type="audio/mpeg">
-  </audio>
+  <audio id="bgm" src="music.mp3" loop></audio>
+  <button id="musicBtn">🎵 Tocar música</button>
 
   <script>
     const targetDate = new Date(2026, 0, 1, 0, 0, 0);
-    const music = document.getElementById("music");
-    let musicPlaying = false;
-
-    function toggleMusic() {
-      if (musicPlaying) {
-        music.pause();
-      } else {
-        music.play();
-      }
-      musicPlaying = !musicPlaying;
-    }
 
     function updateTimer() {
       const now = new Date();
       const diff = targetDate - now;
 
       if (diff <= 0) {
-        document.getElementById("timer").innerText = "00:00:00";
-        document.getElementById("celebrate").style.display = "block";
+        document.getElementById('timer').innerText = '00:00:00';
+        document.getElementById('celebrate').style.display = 'block';
         startFireworks();
-        music.play();
         return;
       }
 
-      const d = Math.floor(diff / (1000 * 60 * 60 * 24));
-      const h = Math.floor((diff / (1000 * 60 * 60)) % 24);
-      const m = Math.floor((diff / (1000 * 60)) % 60);
-      const s = Math.floor((diff / 1000) % 60);
+      const d = Math.floor(diff / (1000*60*60*24));
+      const h = Math.floor(diff / (1000*60*60) % 24);
+      const m = Math.floor(diff / (1000*60) % 60);
+      const s = Math.floor(diff / 1000 % 60);
 
-      document.getElementById("timer").innerText =
-        `${d}d ${h}h ${m}m ${s}s`;
+      document.getElementById('timer').innerText = `${d}d ${h}h ${m}m ${s}s`;
     }
 
     setInterval(updateTimer, 1000);
     updateTimer();
 
-    // ===== FOGOS =====
-    const canvas = document.getElementById("fireworks");
-    const ctx = canvas.getContext("2d");
+    // Música
+    const music = document.getElementById('bgm');
+    const btn = document.getElementById('musicBtn');
+
+    btn.addEventListener('click', () => {
+      if (music.paused) {
+        music.play();
+        btn.innerText = '🔊 Pausar música';
+      } else {
+        music.pause();
+        btn.innerText = '🎵 Tocar música';
+      }
+    });
+
+    // Fogos roxo/lilás
+    const canvas = document.getElementById('fireworks');
+    const ctx = canvas.getContext('2d');
     let particles = [];
 
     function resize() {
       canvas.width = innerWidth;
       canvas.height = innerHeight;
     }
-    window.addEventListener("resize", resize);
+    window.addEventListener('resize', resize);
 
     function startFireworks() {
-      canvas.style.display = "block";
+      canvas.style.display = 'block';
       resize();
-      setInterval(createFirework, 400);
+      setInterval(createFirework, 500);
       animate();
     }
 
     function createFirework() {
       const x = Math.random() * canvas.width;
       const y = Math.random() * canvas.height / 2;
-      const colors = ["#ff004c", "#00ffcc", "#ffe600", "#ffffff"];
+      const colors = ['#b14cff','#e0aaff','#ff8cff','#ffffff'];
 
-      for (let i = 0; i < 80; i++) {
+      for (let i = 0; i < 70; i++) {
         particles.push({
-          x,
-          y,
+          x, y,
           a: Math.random() * Math.PI * 2,
-          s: Math.random() * 6 + 2,
-          l: 100,
+          s: Math.random() * 5 + 2,
+          l: 110,
           c: colors[Math.floor(Math.random() * colors.length)]
         });
       }
@@ -223,7 +211,6 @@
     function animate() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       particles = particles.filter(p => p.l > 0);
-
       particles.forEach(p => {
         p.x += Math.cos(p.a) * p.s;
         p.y += Math.sin(p.a) * p.s;
@@ -231,10 +218,8 @@
         ctx.fillStyle = p.c;
         ctx.fillRect(p.x, p.y, 2, 2);
       });
-
       requestAnimationFrame(animate);
     }
   </script>
 </body>
 </html>
-
